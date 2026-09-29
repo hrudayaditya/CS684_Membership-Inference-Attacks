@@ -1,0 +1,6 @@
+.DS_Store
+__pycache__/
+data/*.npy
+data/synth_raw.jsonl
+data/pilot_raw.jsonl
+results/*.log

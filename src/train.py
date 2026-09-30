@@ -71,7 +71,7 @@ def main():
     ap.add_argument("--start", type=int, default=0)
     ap.add_argument("--end", type=int, default=1)
     ap.add_argument("--seed", type=int, default=0, help="target seed (target mode)")
-    ap.add_argument("--tag", default="", help="name for ablation targets, e.g. ep10")
+    ap.add_argument("--tag", default="", help="ablation name, e.g. ep10: separate target file / shadow folder")
     ap.add_argument("--lr", type=float, default=5e-5)
     ap.add_argument("--epochs", type=int, default=4)
     ap.add_argument("--bs", type=int, default=32)
@@ -97,7 +97,7 @@ def main():
             rng = np.random.default_rng(1_000_000 * (a.pool == "online") + k)
             if a.pool == "offline": mem = rng.choice(test_idx, len(test_idx) // 2, replace=False)      # half of the test split
             else: mem = rng.choice(len(df), len(train_idx), replace=False)                              # target-sized subset of ALL rows
-            jobs.append((f"shadow_{a.pool}/shadow_{k:03d}", np.sort(mem), 100_000 * (a.pool == "online") + 1000 + k))
+            jobs.append((f"shadow_{a.pool}{'_' + a.tag if a.tag else ''}/shadow_{k:03d}", np.sort(mem), 100_000 * (a.pool == "online") + 1000 + k))
 
     for name, members, seed in jobs:
         path = os.path.join(a.out, name + ".npz")
